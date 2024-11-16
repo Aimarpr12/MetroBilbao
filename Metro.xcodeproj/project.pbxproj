@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		63DDC3022CE92B3000FBE7E5 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DDC3012CE92B3000FBE7E5 /* WidgetKit.framework */; };
+		63DDC3042CE92B3000FBE7E5 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DDC3032CE92B3000FBE7E5 /* SwiftUI.framework */; };
+		63DDC3152CE92B3200FBE7E5 /* MetroWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 63DDC2FF2CE92B3000FBE7E5 /* MetroWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		63A8F4532CD7E8F900CD2D46 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,13 +27,47 @@
 			remoteGlobalIDString = 63A8F43C2CD7E8F700CD2D46;
 			remoteInfo = Metro;
 		};
+		63DDC3132CE92B3200FBE7E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63A8F4352CD7E8F700CD2D46 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63DDC2FE2CE92B3000FBE7E5;
+			remoteInfo = MetroWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		63DDC31A2CE92B3200FBE7E5 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				63DDC3152CE92B3200FBE7E5 /* MetroWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		63A8F43D2CD7E8F700CD2D46 /* Metro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A8F4522CD7E8F900CD2D46 /* MetroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A8F45C2CD7E8F900CD2D46 /* MetroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		63DDC2FF2CE92B3000FBE7E5 /* MetroWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MetroWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		63DDC3012CE92B3000FBE7E5 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		63DDC3032CE92B3000FBE7E5 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		63DDC3162CE92B3200FBE7E5 /* Exceptions for "MetroWidget" folder in "MetroWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 63DDC2FE2CE92B3000FBE7E5 /* MetroWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		63A8F43F2CD7E8F700CD2D46 /* Metro */ = {
@@ -43,6 +83,14 @@
 		63A8F45F2CD7E8F900CD2D46 /* MetroUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MetroUITests;
+			sourceTree = "<group>";
+		};
+		63DDC3052CE92B3000FBE7E5 /* MetroWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				63DDC3162CE92B3200FBE7E5 /* Exceptions for "MetroWidget" folder in "MetroWidgetExtension" target */,
+			);
+			path = MetroWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +117,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63DDC2FC2CE92B3000FBE7E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63DDC3042CE92B3000FBE7E5 /* SwiftUI.framework in Frameworks */,
+				63DDC3022CE92B3000FBE7E5 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +135,8 @@
 				63A8F43F2CD7E8F700CD2D46 /* Metro */,
 				63A8F4552CD7E8F900CD2D46 /* MetroTests */,
 				63A8F45F2CD7E8F900CD2D46 /* MetroUITests */,
+				63DDC3052CE92B3000FBE7E5 /* MetroWidget */,
+				63DDC3002CE92B3000FBE7E5 /* Frameworks */,
 				63A8F43E2CD7E8F700CD2D46 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,8 +147,18 @@
 				63A8F43D2CD7E8F700CD2D46 /* Metro.app */,
 				63A8F4522CD7E8F900CD2D46 /* MetroTests.xctest */,
 				63A8F45C2CD7E8F900CD2D46 /* MetroUITests.xctest */,
+				63DDC2FF2CE92B3000FBE7E5 /* MetroWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		63DDC3002CE92B3000FBE7E5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63DDC3012CE92B3000FBE7E5 /* WidgetKit.framework */,
+				63DDC3032CE92B3000FBE7E5 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,10 +171,12 @@
 				63A8F4392CD7E8F700CD2D46 /* Sources */,
 				63A8F43A2CD7E8F700CD2D46 /* Frameworks */,
 				63A8F43B2CD7E8F700CD2D46 /* Resources */,
+				63DDC31A2CE92B3200FBE7E5 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				63DDC3142CE92B3200FBE7E5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				63A8F43F2CD7E8F700CD2D46 /* Metro */,
@@ -163,6 +234,28 @@
 			productReference = 63A8F45C2CD7E8F900CD2D46 /* MetroUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		63DDC2FE2CE92B3000FBE7E5 /* MetroWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63DDC3172CE92B3200FBE7E5 /* Build configuration list for PBXNativeTarget "MetroWidgetExtension" */;
+			buildPhases = (
+				63DDC2FB2CE92B3000FBE7E5 /* Sources */,
+				63DDC2FC2CE92B3000FBE7E5 /* Frameworks */,
+				63DDC2FD2CE92B3000FBE7E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				63DDC3052CE92B3000FBE7E5 /* MetroWidget */,
+			);
+			name = MetroWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = MetroWidgetExtension;
+			productReference = 63DDC2FF2CE92B3000FBE7E5 /* MetroWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +277,9 @@
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = 63A8F43C2CD7E8F700CD2D46;
 					};
+					63DDC2FE2CE92B3000FBE7E5 = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = 63A8F4382CD7E8F700CD2D46 /* Build configuration list for PBXProject "Metro" */;
@@ -203,6 +299,7 @@
 				63A8F43C2CD7E8F700CD2D46 /* Metro */,
 				63A8F4512CD7E8F900CD2D46 /* MetroTests */,
 				63A8F45B2CD7E8F900CD2D46 /* MetroUITests */,
+				63DDC2FE2CE92B3000FBE7E5 /* MetroWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +320,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		63A8F45A2CD7E8F900CD2D46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63DDC2FD2CE92B3000FBE7E5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +357,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63DDC2FB2CE92B3000FBE7E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +376,11 @@
 			isa = PBXTargetDependency;
 			target = 63A8F43C2CD7E8F700CD2D46 /* Metro */;
 			targetProxy = 63A8F45D2CD7E8F900CD2D46 /* PBXContainerItemProxy */;
+		};
+		63DDC3142CE92B3200FBE7E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63DDC2FE2CE92B3000FBE7E5 /* MetroWidgetExtension */;
+			targetProxy = 63DDC3132CE92B3200FBE7E5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -518,6 +634,60 @@
 			};
 			name = Release;
 		};
+		63DDC3182CE92B3200FBE7E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FSQ8798AA5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MetroWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MetroWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Aimarpr12.Metro.MetroWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		63DDC3192CE92B3200FBE7E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FSQ8798AA5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MetroWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MetroWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Aimarpr12.Metro.MetroWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -553,6 +723,15 @@
 			buildConfigurations = (
 				63A8F46D2CD7E8F900CD2D46 /* Debug */,
 				63A8F46E2CD7E8F900CD2D46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		63DDC3172CE92B3200FBE7E5 /* Build configuration list for PBXNativeTarget "MetroWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63DDC3182CE92B3200FBE7E5 /* Debug */,
+				63DDC3192CE92B3200FBE7E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

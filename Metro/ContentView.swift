@@ -8,12 +8,17 @@
 import SwiftUI
 import CoreData
 
+extension Color {
+    static let primaryColor = Color(red: 241/255, green: 78/255, blue: 45/255)
+    static let secondaryColor = Color(red: 120/255, green: 200/255, blue: 150/255)
+}
+
 struct ContentView: View {
     
     // Utilizamos `@AppStorage` para sincronizar directamente con `UserDefaults`
     @AppStorage("estacionSalida") private var estacionSalidaRawValue: String?
     @AppStorage("estacionLlegada") private var estacionLlegadaRawValue: String?
-    
+    @State private var errorMensaje: String? = nil
     @State private var estacionSalida: Estacion?
     @State private var estacionLlegada: Estacion?
     @State private var rutas: [Ruta] = []
@@ -39,14 +44,15 @@ struct ContentView: View {
                             }
                         )) {
                             Text("Seleccione una estación").tag(nil as Estacion?)
+                                .foregroundColor(Color("PrimaryColor"))
                             ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
                                 Text(estacion.rawValue).tag(estacion as Estacion?)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255))
+                        .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color de la letra aquí
                         .padding()
-                        
+
                         // Estación de Llegada Dropdown
                         Picker("Estación de Llegada", selection: Binding<Estacion?>(
                             get: {
@@ -63,6 +69,7 @@ struct ContentView: View {
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
+                        .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color de la letra aquí
                         .padding()
                     }
 
@@ -90,6 +97,14 @@ struct ContentView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                // Mostrar mensaje de error si existe
+                if let mensaje = errorMensaje {
+                    Text(mensaje)
+                        .foregroundColor(.red)
+                        .padding(.top, 5)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
                 
                 VStack {
                     // Radio para elegir entre salida inmediata y programar viaje
@@ -199,150 +214,32 @@ struct ContentView: View {
     
     private func buscarRuta() {
         guard let salida = estacionSalida, let llegada = estacionLlegada else {
-            print("Seleccione ambas estaciones")
+            errorMensaje = "Seleccione ambas estaciones"
             return
         }
-    
-        var urlString = "https://api.metrobilbao.eus/metro/real-time/\(salida)/\(llegada)"
-        if(tipoSalida == TipoSalida.programada){
-           
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy"
-            let formattedDate = dateFormatter.string(from: fechaSeleccionada)
-            
-            let calendar = Calendar.current
-            let hourDesde = calendar.component(.hour, from: horaDesde)
-            let minuteDesde = calendar.component(.minute, from: horaDesde)
-            let formattedTimeDesde = "\(hourDesde).\(minuteDesde)"
-
-            // Obtener la hora y minutos para horaHasta
-            let hourHasta = calendar.component(.hour, from: horaHasta)
-            let minuteHasta = calendar.component(.minute, from: horaHasta)
-            let formattedTimeHasta = "\(hourHasta).\(minuteHasta)"
-            
-            urlString = "https://api.metrobilbao.eus/metro/obtain-schedule-of-trip/\(salida)/\(llegada)/\(formattedTimeDesde)/\(formattedTimeHasta)/\(formattedDate)/es"
-        }
-        print(urlString)
         
-        guard let url = URL(string: urlString) else {
-            print("URL no válida")
+        guard salida != llegada else {
+            errorMensaje = "La estación de salida y la estación de llegada no pueden ser iguales"
             return
         }
-        if(tipoSalida == TipoSalida.inmediata){
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    print("Error en la solicitud: \(error)")
-                    return
-                }
-
-                guard let data = data else {
-                    print("No se recibió data")
-                    return
-                }
-
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                       let trip = json["trip"] as? [String: Any],
-                       let trains = json["trains"] as? [[String: Any]],
-                       let transbordo = trip["transfer"] as? Bool,
-                       let transbordoTexto = transbordo ? "Si" : "No",
-                       let duration = trip["duration"] as? Int {
-
-                        var nuevasRutas: [Ruta] = []
-                        for train in trains {
-                            if let timeRounded = train["timeRounded"] as? String,
-                               let estimated = train["estimated"] as? Int {
-
-                                // Calculamos la hora de llegada sumando la duración a la hora de salida
-                                let salidaHora = timeRounded
-                                let llegadaHora = calcularHoraLlegada(hora: timeRounded, minutos: estimated)
-
-                                // Crear una nueva ruta para cada tren
-                                let nuevaRuta = Ruta(horaSalida: salidaHora, horaLlegada: llegadaHora, duracion: duration, trasbordo: transbordoTexto)
-                                nuevasRutas.append(nuevaRuta)
-                            }
-                        }
-                        nuevasRutas.sort { ruta1, ruta2 in
-                            return ruta1.horaSalida < ruta2.horaSalida
-                        }
-                        // Actualizamos la lista de rutas en el hilo principal
-                        DispatchQueue.main.async {
-                            rutas = nuevasRutas
-                        }
-                    }
-                } catch {
-                    print("Error al analizar JSON: \(error)")
-                }
-            }.resume()
-        }else{
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    print("Error en la solicitud: \(error)")
-                    return
-                }
-
-                guard let data = data else {
-                    print("No se recibió data")
-                    return
-                }
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                       let trips = json["trips"] as? [String: Any],
-                        let transbordo = json["transfer"] as? Bool,
-                        let transbordoTexto = transbordo ? "Si" : "No"{
-                        
-                        var nuevasRutas: [Ruta] = []
-                        // Recorremos todas las claves dinámicas dentro de trips
-                        for (_, tripArray) in trips {
-                            if let tripData = tripArray as? [[String: Any]] {
-                                for trip in tripData {
-                                    if let originArrivalTimeRounder = trip["originArrivalTimeRounder"] as? String,
-                                       let destinyArrivalTimeRounder = trip["destinyArrivalTimeRounder"] as? String,
-                                       let originTime = trip["originTime"] as? [String: Any],
-                                       let duracion = trip["time"] as? Int {
-                                        
-                                        // Extraemos la información de las rutas
-                                        let salidaHora = originArrivalTimeRounder
-                                        let llegadaHora = destinyArrivalTimeRounder
-                                        // Crear una nueva ruta para cada elemento
-                                        let nuevaRuta = Ruta(horaSalida: salidaHora, horaLlegada: llegadaHora, duracion: duracion, trasbordo: transbordoTexto)
-                                        nuevasRutas.append(nuevaRuta)
-                                    }
-                                }
-                            }
-                        }
-                        nuevasRutas.sort { ruta1, ruta2 in
-                            return ruta1.horaSalida < ruta2.horaSalida
-                        }
-                        // Actualizamos la lista de rutas en el hilo principal
-                        DispatchQueue.main.async {
-                            rutas = nuevasRutas
-                        }
-                    }
-                } catch {
-                    print("Error al analizar JSON: \(error)")
-                }
-            }.resume()
+        
+        errorMensaje = nil
+        
+        MetroService.shared.buscarRuta(
+            salida: "\(salida)",
+            llegada: "\(llegada)",
+            tipoSalida: tipoSalida,
+            fechaSeleccionada: tipoSalida == .programada ? fechaSeleccionada : nil,
+            horaDesde: tipoSalida == .programada ? horaDesde : nil,
+            horaHasta: tipoSalida == .programada ? horaHasta : nil
+        ) { rutasObtenidas in
+            DispatchQueue.main.async {
+                self.rutas = rutasObtenidas
+            }
         }
     }
-    
-    private func calcularHoraLlegada(hora: String, minutos: Int) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm"
-            
-            guard let date = dateFormatter.date(from: hora) else { return "N/A" }
-            let llegada = Calendar.current.date(byAdding: .minute, value: minutos, to: date)
-            
-            return dateFormatter.string(from: llegada ?? date)
-        }
     
 }
 #Preview {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
-
-
-enum TipoSalida {
-    case inmediata
-    case programada
 }
