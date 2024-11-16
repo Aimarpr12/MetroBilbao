@@ -13,4 +13,5 @@ struct Ruta: Identifiable {
     let horaLlegada: String
     let duracion: Int
     let trasbordo: String
+    var originTime: [String: Any]? 
 }
