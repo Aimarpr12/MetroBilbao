@@ -15,7 +15,6 @@ class MetroService {
         horaHasta: Date? = nil,
         completion: @escaping ([Ruta]) -> Void
     ) {
-        print(salida)
         var urlString = "https://api.metrobilbao.eus/metro/real-time/\(salida)/\(llegada)"
         if tipoSalida == .programada,
            let fecha = fechaSeleccionada,
