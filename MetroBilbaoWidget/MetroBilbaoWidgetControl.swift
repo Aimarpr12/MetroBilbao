@@ -1,16 +1,16 @@
 //
-//  MetroWidgetControl.swift
-//  MetroWidget
+//  MetroBilbaoWidgetControl.swift
+//  MetroBilbaoWidget
 //
-//  Created by Aimar  Pelea on 16/11/24.
+//  Created by Aimar Pelea on 11/30/24.
 //
 
 import AppIntents
 import SwiftUI
 import WidgetKit
 
-struct MetroWidgetControl: ControlWidget {
-    static let kind: String = "Aimarpr12.Metro.MetroWidget"
+struct MetroBilbaoWidgetControl: ControlWidget {
+    static let kind: String = "Aimarpr12.Metro.MetroBilbaoWidget"
 
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(
@@ -30,7 +30,7 @@ struct MetroWidgetControl: ControlWidget {
     }
 }
 
-extension MetroWidgetControl {
+extension MetroBilbaoWidgetControl {
     struct Value {
         var isRunning: Bool
         var name: String
@@ -38,12 +38,12 @@ extension MetroWidgetControl {
 
     struct Provider: AppIntentControlValueProvider {
         func previewValue(configuration: TimerConfiguration) -> Value {
-            MetroWidgetControl.Value(isRunning: false, name: configuration.timerName)
+            MetroBilbaoWidgetControl.Value(isRunning: false, name: configuration.timerName)
         }
 
         func currentValue(configuration: TimerConfiguration) async throws -> Value {
             let isRunning = true // Check if the timer is running
-            return MetroWidgetControl.Value(isRunning: isRunning, name: configuration.timerName)
+            return MetroBilbaoWidgetControl.Value(isRunning: isRunning, name: configuration.timerName)
         }
     }
 }

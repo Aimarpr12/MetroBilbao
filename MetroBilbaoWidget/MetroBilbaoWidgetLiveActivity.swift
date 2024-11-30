@@ -1,15 +1,15 @@
 //
-//  MetroWidgetLiveActivity.swift
-//  MetroWidget
+//  MetroBilbaoWidgetLiveActivity.swift
+//  MetroBilbaoWidget
 //
-//  Created by Aimar  Pelea on 16/11/24.
+//  Created by Aimar Pelea on 11/30/24.
 //
 
 import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct MetroWidgetAttributes: ActivityAttributes {
+struct MetroBilbaoWidgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
         var emoji: String
@@ -19,9 +19,9 @@ struct MetroWidgetAttributes: ActivityAttributes {
     var name: String
 }
 
-struct MetroWidgetLiveActivity: Widget {
+struct MetroBilbaoWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: MetroWidgetAttributes.self) { context in
+        ActivityConfiguration(for: MetroBilbaoWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
                 Text("Hello \(context.state.emoji)")
@@ -56,25 +56,25 @@ struct MetroWidgetLiveActivity: Widget {
     }
 }
 
-extension MetroWidgetAttributes {
-    fileprivate static var preview: MetroWidgetAttributes {
-        MetroWidgetAttributes(name: "World")
+extension MetroBilbaoWidgetAttributes {
+    fileprivate static var preview: MetroBilbaoWidgetAttributes {
+        MetroBilbaoWidgetAttributes(name: "World")
     }
 }
 
-extension MetroWidgetAttributes.ContentState {
-    fileprivate static var smiley: MetroWidgetAttributes.ContentState {
-        MetroWidgetAttributes.ContentState(emoji: "😀")
+extension MetroBilbaoWidgetAttributes.ContentState {
+    fileprivate static var smiley: MetroBilbaoWidgetAttributes.ContentState {
+        MetroBilbaoWidgetAttributes.ContentState(emoji: "😀")
      }
      
-     fileprivate static var starEyes: MetroWidgetAttributes.ContentState {
-         MetroWidgetAttributes.ContentState(emoji: "🤩")
+     fileprivate static var starEyes: MetroBilbaoWidgetAttributes.ContentState {
+         MetroBilbaoWidgetAttributes.ContentState(emoji: "🤩")
      }
 }
 
-#Preview("Notification", as: .content, using: MetroWidgetAttributes.preview) {
-   MetroWidgetLiveActivity()
+#Preview("Notification", as: .content, using: MetroBilbaoWidgetAttributes.preview) {
+   MetroBilbaoWidgetLiveActivity()
 } contentStates: {
-    MetroWidgetAttributes.ContentState.smiley
-    MetroWidgetAttributes.ContentState.starEyes
+    MetroBilbaoWidgetAttributes.ContentState.smiley
+    MetroBilbaoWidgetAttributes.ContentState.starEyes
 }
