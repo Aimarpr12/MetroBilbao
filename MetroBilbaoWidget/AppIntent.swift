@@ -4,7 +4,6 @@
 //
 //  Created by Aimar Pelea on 11/30/24.
 //
- 
 import WidgetKit
 import AppIntents
 

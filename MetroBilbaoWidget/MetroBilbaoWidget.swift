@@ -25,6 +25,7 @@ struct Provider: AppIntentTimelineProvider {
         print("📅 Timeline ejecutado a las: \(currentDate)")
 
         // Obtener las horas para cada fila
+
         let horas1 = await obtenerHoras(salida: configuration.origen1?.id ?? "", llegada: configuration.destino1?.id ?? "")
         let horas2 = await obtenerHoras(salida: configuration.origen2?.id ?? "", llegada: configuration.destino2?.id ?? "")
         let horas3 = await obtenerHoras(salida: configuration.origen3?.id ?? "", llegada: configuration.destino3?.id ?? "")
@@ -71,6 +72,7 @@ struct Provider: AppIntentTimelineProvider {
             print("Error al obtener datos: \(error.localizedDescription)")
             return ["", ""]
         }
+
     }
 
 //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
