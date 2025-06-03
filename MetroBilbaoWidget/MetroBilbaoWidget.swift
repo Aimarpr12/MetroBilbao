@@ -7,6 +7,8 @@
 
 import WidgetKit
 import SwiftUI
+import AppIntents
+
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -111,10 +113,16 @@ struct MetroBilbaoWidgetEntryView : View {
                 Text("Act.: \(entry.date, formatter: DateFormatter.shortTime)")
                     .font(.caption)
                     .foregroundColor(.gray)
+                // Botón para actualizar el widget
+                Button(intent: ActualizarWidgetIntent()) {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundColor(.blue)
+                }
+                .buttonStyle(.borderless)  // Evita que el botón afecte el diseño
             }
             .padding(.horizontal, 10)
             .padding(.bottom, 5)
-
+            
             // Tabla con información
             VStack(spacing: 4) {
                 // Encabezados
@@ -226,11 +234,10 @@ struct MetroBilbaoWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Metro Bilbao")
-        .description("A widget that shows the current status of the Metro Bilbao.")
-        .supportedFamilies([.systemMedium])
+        .description("Consulta los horarios actualizados del Metro Bilbao.")
+        .supportedFamilies([.systemMedium, .systemLarge]) // Puedes agregar otros tamaños si quieres
         .contentMarginsDisabled()
     }
-    
 }
 
 extension ConfigurationAppIntent {

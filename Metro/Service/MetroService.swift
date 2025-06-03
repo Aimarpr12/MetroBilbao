@@ -70,7 +70,7 @@ class MetroService {
                                 if let timeRounded = train["timeRounded"] as? String,
                                    let estimated = train["estimated"] as? Int {
                                     let salidaHora = timeRounded
-                                    let llegadaHora = self.calcularHoraLlegada(hora: timeRounded, minutos: estimated)
+                                    let llegadaHora = self.calcularHoraLlegada(hora: timeRounded, minutos: duration)
                                     
                                     let nuevaRuta = Ruta(horaSalida: salidaHora, horaLlegada: llegadaHora, duracion: duration, trasbordo: transbordoTexto)
                                     nuevasRutas.append(nuevaRuta)
@@ -81,6 +81,8 @@ class MetroService {
                         if let trips = json["trips"] as? [String: Any] {
                             let transbordo = json["transfer"] as? Bool ?? false
                             let transbordoTexto = transbordo ? "Si" : "No"
+                            let timeString = json["time"] as? String ?? "0"
+                            let time = Int(timeString) ?? 0
                             
                             for (_, tripArray) in trips {
                                 if let tripData = tripArray as? [[String: Any]] {
@@ -90,7 +92,7 @@ class MetroService {
                                             continue
                                         }
                                         
-                                        let duracion = transbordo ? trip["time"] as? Int ?? 0 : json["time"] as? Int ?? 0
+                                        let duracion = time == 0 ? trip["time"] as? Int ?? 0 : time
                                         let nuevaRuta = Ruta(
                                             horaSalida: originArrivalTimeRounder,
                                             horaLlegada: destinyArrivalTimeRounder,

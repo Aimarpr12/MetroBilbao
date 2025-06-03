@@ -60,6 +60,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		631A49142D69BAF8003CF9D9 /* Exceptions for "Metro" folder in "Metro" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 63A8F43C2CD7E8F700CD2D46 /* Metro */;
+		};
 		6366E23A2CFB43CB00A0F95A /* Exceptions for "MetroBilbaoWidget" folder in "MetroBilbaoWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -80,6 +87,9 @@
 		};
 		63A8F43F2CD7E8F700CD2D46 /* Metro */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				631A49142D69BAF8003CF9D9 /* Exceptions for "Metro" folder in "Metro" target */,
+			);
 			path = Metro;
 			sourceTree = "<group>";
 		};
@@ -569,6 +579,7 @@
 				DEVELOPMENT_TEAM = FSQ8798AA5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Metro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -598,6 +609,7 @@
 				DEVELOPMENT_TEAM = FSQ8798AA5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Metro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

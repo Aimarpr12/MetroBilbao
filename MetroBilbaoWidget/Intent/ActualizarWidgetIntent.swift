@@ -1,3 +1,11 @@
+//
+//  ActualizarWidgetIntent.swift
+//  Metro
+//
+//  Created by Aimar Pelea on 2/22/25.
+//
+
+
 import AppIntents
 import WidgetKit
 

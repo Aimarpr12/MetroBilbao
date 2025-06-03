@@ -12,7 +12,5 @@ import SwiftUI
 struct MetroBilbaoWidgetBundle: WidgetBundle {
     var body: some Widget {
         MetroBilbaoWidget()
-        MetroBilbaoWidgetControl()
-        MetroBilbaoWidgetLiveActivity()
     }
 }

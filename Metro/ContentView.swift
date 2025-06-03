@@ -50,7 +50,7 @@ struct ContentView: View {
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color de la letra aquí
+                        .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
                         .padding()
 
                         // Estación de Llegada Dropdown
@@ -69,7 +69,7 @@ struct ContentView: View {
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color de la letra aquí
+                        .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
                         .padding()
                     }
 
@@ -114,6 +114,10 @@ struct ContentView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
+                    .onChange(of: tipoSalida) { newValue in
+                        buscarRuta()
+                        
+                    }
 
                     // Mostrar la selección de fecha/hora solo si el usuario elige "Programar Viaje"
                     if tipoSalida == .programada {
@@ -123,9 +127,9 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                             DatePicker("", selection: $fechaSeleccionada, displayedComponents: .date)
                                 .datePickerStyle(CompactDatePickerStyle())
+                                .accentColor(Color.primaryColor)
                                 .frame(maxWidth: .infinity)
                                 .multilineTextAlignment(.center)
-                            
                         }
                         .padding()
 
@@ -136,6 +140,7 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                             DatePicker("", selection: $horaDesde, displayedComponents: .hourAndMinute)
                                 .datePickerStyle(CompactDatePickerStyle())
+                                .accentColor(Color.primaryColor)
                                 .onChange(of: horaDesde) { newHoraDesde in
                                     horaHasta = Calendar.current.date(byAdding: .hour, value: 1, to: newHoraDesde) ?? newHoraDesde
                                 }
@@ -147,9 +152,9 @@ struct ContentView: View {
                                 .multilineTextAlignment(.center)
                             DatePicker("", selection: $horaHasta, displayedComponents: .hourAndMinute)
                                 .datePickerStyle(CompactDatePickerStyle())
+                                .accentColor(Color.primaryColor)
                                 .frame(maxWidth: .infinity)
                                 .multilineTextAlignment(.center)
-                            
                         }
                         .padding()
                     }
