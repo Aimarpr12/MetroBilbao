@@ -77,6 +77,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		634F15132DEF9108000751B5 /* Docs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Docs;
+			sourceTree = "<group>";
+		};
 		6366E2292CFB43CA00A0F95A /* MetroBilbaoWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -142,6 +147,7 @@
 		63A8F4342CD7E8F700CD2D46 = {
 			isa = PBXGroup;
 			children = (
+				634F15132DEF9108000751B5 /* Docs */,
 				63A8F43F2CD7E8F700CD2D46 /* Metro */,
 				63A8F4552CD7E8F900CD2D46 /* MetroTests */,
 				63A8F45F2CD7E8F900CD2D46 /* MetroUITests */,
@@ -211,6 +217,7 @@
 				6366E2382CFB43CB00A0F95A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				634F15132DEF9108000751B5 /* Docs */,
 				63A8F43F2CD7E8F700CD2D46 /* Metro */,
 			);
 			name = Metro;
