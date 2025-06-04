@@ -39,7 +39,7 @@ Widget para iOS que muestra los próximos trenes entre dos estaciones del Metro 
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/Aimarpr12/MetroBilbaoWidget.git
+   git clone https://github.com/Aimarpr12/MetroBilbao
    ```
 2. Abre el proyecto en Xcode.
 3. Configura el equipo en `Signing & Capabilities`.
