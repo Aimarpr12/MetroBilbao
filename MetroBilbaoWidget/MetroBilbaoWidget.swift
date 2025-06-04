@@ -233,8 +233,8 @@ struct MetroBilbaoWidget: Widget {
             MetroBilbaoWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Metro Bilbao")
-        .description("Consulta los horarios actualizados del Metro Bilbao.")
+        .configurationDisplayName("MetroApp")
+        .description("Consulta los horarios actualizados del Metro de Bilbao.")
         .supportedFamilies([.systemMedium, .systemLarge]) // Puedes agregar otros tamaños si quieres
         .contentMarginsDisabled()
     }

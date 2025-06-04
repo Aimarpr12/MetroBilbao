@@ -7,10 +7,73 @@
 
 import SwiftUI
 import CoreData
+import CoreLocation
 
 extension Color {
     static let primaryColor = Color(red: 241/255, green: 78/255, blue: 45/255)
     static let secondaryColor = Color(red: 120/255, green: 200/255, blue: 150/255)
+}
+
+final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
+
+    @Published var lastLocation: CLLocation?
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    @Published var lastError: Error?
+
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    }
+
+    func requestPermissionIfNeeded() {
+        let status = manager.authorizationStatus
+        authorizationStatus = status
+
+        switch status {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedAlways, .authorizedWhenInUse:
+            break
+        default:
+            break
+        }
+    }
+
+    func requestOneShotLocation() {
+        lastError = nil
+        manager.requestLocation()
+    }
+
+    // MARK: - CLLocationManagerDelegate
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        authorizationStatus = status
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            requestOneShotLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        lastLocation = locations.last
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        lastError = error
+    }
+}
+
+private struct NearbyStationResponse: Decodable {
+    let code: String
+    let name: String
+    let exit: Exit
+
+    struct Exit: Decodable {
+        let name: String
+        let address: String
+        let latitude: String
+        let longitude: String
+    }
 }
 
 struct ContentView: View {
@@ -28,30 +91,45 @@ struct ContentView: View {
     @State private var fechaSeleccionada: Date = Date()
     @State private var horaDesde: Date = Date()
     @State private var horaHasta: Date = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
+    @StateObject private var locationManager = LocationManager()
     
     var body: some View {
-            VStack (alignment: .leading) {
+            VStack(alignment: .leading) {
                 HStack {
                     VStack {
-                        // Estación de Salida Dropdown
-                        Picker("Estación de Salida", selection: Binding<Estacion?>(
-                            get: {
-                                estacionSalida
-                            },
-                            set: { newValue in
-                                estacionSalida = newValue
-                                estacionSalidaRawValue = newValue?.rawValue // Guardar en UserDefaults
+                        HStack(spacing: 8) {
+                            Picker("Estación de Salida", selection: Binding<Estacion?>(
+                                get: { estacionSalida },
+                                set: { newValue in
+                                    estacionSalida = newValue
+                                    estacionSalidaRawValue = newValue?.rawValue
+                                }
+                            )) {
+                                Text("Seleccione una estación").tag(nil as Estacion?)
+                                ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
+                                    Text(estacion.rawValue)
+                                        .lineLimit(1)                 // <- clave
+                                        .truncationMode(.tail)
+                                        .tag(estacion as Estacion?)
+                                }
                             }
-                        )) {
-                            Text("Seleccione una estación").tag(nil as Estacion?)
-                                .foregroundColor(Color("PrimaryColor"))
-                            ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
-                                Text(estacion.rawValue).tag(estacion as Estacion?)
+                            .pickerStyle(.menu)
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity, alignment: .leading) // <- clave
+                            .layoutPriority(1)                                // <- clave
+                            .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
+                            .padding(.vertical)
+                            .padding(.leading)
+
+                            Button(action: { buscarEstacionMasCercana() }) {
+                                Image(systemName: "location.fill")
+                                    .font(.title)
+                                    .padding()
+                                    .clipShape(Circle())
+                                    .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255))
                             }
+                            .padding(.trailing)
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
-                        .padding()
                         if tipoSalida != .teleindicador {
                             // Estación de Llegada Dropdown
                             Picker("Estación de Llegada", selection: Binding<Estacion?>(
@@ -63,14 +141,24 @@ struct ContentView: View {
                                     estacionLlegadaRawValue = newValue?.rawValue // Guardar en UserDefaults
                                 }
                             )) {
-                                Text("Seleccione una estación").tag(nil as Estacion?)
+                                Text("Seleccione una estación")
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .tag(nil as Estacion?)
                                 ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
-                                    Text(estacion.rawValue).tag(estacion as Estacion?)
+                                    Text(estacion.rawValue)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                        .tag(estacion as Estacion?)
                                 }
                             }
-                            .pickerStyle(MenuPickerStyle())
+                            .pickerStyle(.menu)
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .layoutPriority(1)
                             .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
-                            .padding()
+                            .padding(.vertical)
+                            .padding(.leading)
                         }
                     }
                     //Eliminar la flecha para cambiar las direcciones si es teleindicador
@@ -238,6 +326,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .navigationTitle("Buscar Ruta")
             .onAppear {
+                locationManager.requestPermissionIfNeeded()
                 // Cargar estaciones almacenadas al iniciar la vista
                 if let salidaRaw = estacionSalidaRawValue {
                     estacionSalida = Estacion(rawValue: salidaRaw)
@@ -285,6 +374,114 @@ struct ContentView: View {
         ) { rutasObtenidas in
             DispatchQueue.main.async {
                 self.rutas = rutasObtenidas
+            }
+        }
+    }
+    
+    private func buscarEstacionMasCercana() {
+        locationManager.requestPermissionIfNeeded()
+        locationManager.requestOneShotLocation()
+
+        // If we already have a cached location, use it immediately.
+        if let loc = locationManager.lastLocation {
+            fetchNearbyStation(lat: loc.coordinate.latitude, lon: loc.coordinate.longitude)
+            return
+        }
+
+        // Otherwise, wait a moment for CoreLocation to return.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            if let err = locationManager.lastError {
+                errorMensaje = "No se pudo obtener la ubicación: \(err.localizedDescription)"
+                return
+            }
+
+            guard let loc2 = locationManager.lastLocation else {
+                switch locationManager.authorizationStatus {
+                case .denied, .restricted:
+                    errorMensaje = "Permiso de ubicación denegado. Actívalo en Ajustes para usar esta función."
+                default:
+                    errorMensaje = "No se pudo obtener la ubicación. Inténtalo de nuevo."
+                }
+                return
+            }
+
+            fetchNearbyStation(lat: loc2.coordinate.latitude, lon: loc2.coordinate.longitude)
+        }
+    }
+
+    private func fetchNearbyStation(lat: Double, lon: Double) {
+        errorMensaje = nil
+
+        // Build the URL: https://api.metrobilbao.eus/metro/obtain-nearby-station/{lat}/{lon}
+        let urlString = "https://api.metrobilbao.eus/metro/obtain-nearby-station/\(lat)/\(lon)"
+        print("[NearbyStation] URL -> \(urlString)")
+
+        guard let url = URL(string: urlString) else {
+            errorMensaje = "URL inválida para obtener la estación más cercana."
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 12
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(for: request)
+
+                guard let http = response as? HTTPURLResponse else {
+                    await MainActor.run {
+                        errorMensaje = "Respuesta inválida del servidor."
+                    }
+                    return
+                }
+
+                if !(200...299).contains(http.statusCode) {
+                    let body = String(data: data, encoding: .utf8) ?? "(no UTF-8 body)"
+                    print("[NearbyStation] HTTP \(http.statusCode) body -> \(body)")
+                    await MainActor.run {
+                        errorMensaje = "Error del servidor (HTTP \(http.statusCode))."
+                    }
+                    return
+                }
+
+                guard !data.isEmpty else {
+                    print("[NearbyStation] Empty body (HTTP \(http.statusCode))")
+                    await MainActor.run {
+                        errorMensaje = "La API devolvió una respuesta vacía."
+                    }
+                    return
+                }
+
+                // Debug raw JSON (useful while developing)
+                if let raw = String(data: data, encoding: .utf8) {
+                    print("[NearbyStation] JSON -> \(raw)")
+                }
+
+                let decoded = try JSONDecoder().decode(NearbyStationResponse.self, from: data)
+
+                await MainActor.run {
+                    // Map using the API CODE (e.g. "ARZ" -> Estacion.ARZ)
+                    if let estacion = Estacion(apiCode: decoded.code) {
+                        estacionSalida = estacion
+                        estacionSalidaRawValue = estacion.rawValue
+                        buscarRuta()
+                    } else {
+                        errorMensaje = "La API devolvió el código \"\(decoded.code)\" pero no existe en tu enum Estacion."
+                    }
+                }
+            } catch {
+                // If decoding fails, show the specific decoding error
+                if let decErr = error as? DecodingError {
+                    print("[NearbyStation] DecodingError -> \(decErr)")
+                } else {
+                    print("[NearbyStation] Error -> \(error)")
+                }
+
+                await MainActor.run {
+                    errorMensaje = "Error obteniendo estación cercana: \(error.localizedDescription)"
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ import AppIntents
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Configuración de Metro" }
-    static var description: IntentDescription { "Configura las estaciones de origen y destino para el widget del Metro Bilbao." }
+    static var description: IntentDescription { "Configura las estaciones de origen y destino para el widget del Metro de Bilbao." }
 
     // Parámetros configurables (deben ser opcionales)
     @Parameter(title: "Origen 1")

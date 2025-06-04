@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 class MetroService {
+    
     static let shared = MetroService()
     
     private init() {} // Para asegurar una instancia única si se usa como singleton
@@ -178,6 +179,16 @@ class MetroService {
                 completion([])
             }
         }.resume()
+    }
+    
+    func buscarEstacionMasCercana(
+        salida: String,
+        completion: @escaping ([Ruta]) -> Void
+    ) {
+        var lat: Double = 0
+        var lon: Double = 0
+        var urlString = "https://api.metrobilbao.eus/metro/obtain-nearby-station/\(lat)/\(lon)"
+        
     }
     
     private func calcularHoraLlegada(hora: String, minutos: Int) -> String {
