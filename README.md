@@ -1,3 +1,5 @@
+![light](Docs/MetroBanner.jpeg)
+
 # 🚇 Metro Bilbao Widget
 
 Widget para iOS que muestra los próximos trenes entre dos estaciones del Metro de Bilbao. Desarrollado en SwiftUI con integración de WidgetKit y App Intents.
