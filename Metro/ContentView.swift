@@ -73,27 +73,29 @@ struct ContentView: View {
                             .padding()
                         }
                     }
-
-                    VStack {
-                        // Botón de intercambio con icono, alineado a la derecha
-                        Button(action: {
-                            // Intercambiar las estaciones de salida y llegada
-                            let temp = estacionSalida
-                            estacionSalida = estacionLlegada
-                            estacionLlegada = temp
-                            
-                            // Actualizar los valores en UserDefaults si es necesario
-                            estacionSalidaRawValue = estacionSalida?.rawValue
-                            estacionLlegadaRawValue = estacionLlegada?.rawValue
-                        }) {
-                            Image(systemName: "arrow.left.arrow.right")
-                                .font(.title)
-                                .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .clipShape(Circle())
-                                .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color del ícono
+                    //Eliminar la flecha para cambiar las direcciones si es teleindicador
+                    if tipoSalida != .teleindicador {
+                        VStack {
+                            // Botón de intercambio con icono, alineado a la derecha
+                            Button(action: {
+                                // Intercambiar las estaciones de salida y llegada
+                                let temp = estacionSalida
+                                estacionSalida = estacionLlegada
+                                estacionLlegada = temp
+                                
+                                // Actualizar los valores en UserDefaults si es necesario
+                                estacionSalidaRawValue = estacionSalida?.rawValue
+                                estacionLlegadaRawValue = estacionLlegada?.rawValue
+                            }) {
+                                Image(systemName: "arrow.left.arrow.right")
+                                    .font(.title)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .clipShape(Circle())
+                                    .foregroundColor(Color(red: 241/255, green: 78/255, blue: 45/255)) // Cambia el color del ícono
+                            }
+                            .padding(.trailing)
                         }
-                        .padding(.trailing)
                     }
                 }
                 .padding()
