@@ -61,3 +61,11 @@ Widget para iOS que muestra los próximos trenes entre dos estaciones del Metro 
 
 MIT License  
 © [Aimar Pelea](https://github.com/Aimarpr12)
+
+---
+
+### 🗂️ Fuente de datos
+
+Los horarios y tiempos reales se obtienen del dataset **“Metro Bilbao – Datos de tiempos reales (GTFS-RT)”** publicado por **Metro Bilbao / Consorcio de Transportes de Bizkaia (CTB)**.  
+Se reutilizan bajo la licencia [Creative Commons Atribución 4.0 Internacional](https://creativecommons.org/licenses/by/4.0/).  
+Catálogo oficial de datos abiertos: <https://data.ctb.eus/es/dataset/>
