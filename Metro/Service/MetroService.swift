@@ -36,6 +36,8 @@ class MetroService {
             
             urlString = "https://api.metrobilbao.eus/metro/obtain-schedule-of-trip/\(salida)/\(llegada)/\(formattedTimeDesde)/\(formattedTimeHasta)/\(formattedDate)/es"
             
+        } else if tipoSalida == .teleindicador {
+            urlString = "https://api.metrobilbao.eus/api/stations/\(salida)?lang=es"
         }
         print(urlString)
         guard let url = URL(string: urlString) else {
@@ -77,7 +79,46 @@ class MetroService {
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else if tipoSalida == .teleindicador {
+                        // json es el diccionario que obtienes con JSONSerialization
+                        if let platformsDict   = json["platforms"] as? [String: Any],
+                           let groups          = platformsDict["Platforms"] as? [[[String: Any]]] {
+
+                            // ➊ Reunimos destination-minutes en un array plano
+                            var arrivals: [(destination: String, minutes: Int, hora: String)] = []
+
+                            for group in groups {                 // Cada andén (array)
+                                for train in group {              // Cada tren (diccionario)
+                                    if let dest   = train["Destination"] as? String,
+                                       let mins   = train["Minutes"]     as? Int,
+                                       let timeISO = train["Time"]       as? String {
+
+                                        // Extraer “HH:mm” del formato ISO‑8601 (“2025-06-04T16:57:18” → “16:57”)
+                                        let hora = String(timeISO.split(separator: "T")[1].prefix(5))
+                                        arrivals.append((dest, mins, hora))
+                                    }
+                                }
+                            }
+
+                            // ➋ Ordenamos por el tiempo de espera
+                            arrivals.sort { $0.minutes < $1.minutes }
+
+                            // ➌ Ejemplo de uso: imprimir o alimentar tu vista
+                            for arrival in arrivals {
+                                //print("\(arrival.destination) – \(arrival.minutes) min – \(arrival.hora)")
+
+                                let nuevaRuta = Ruta(
+                                    horaSalida: arrival.destination,
+                                    horaLlegada: arrival.hora,
+                                    duracion: arrival.minutes,
+                                    trasbordo: "No"
+                                )
+                                nuevasRutas.append(nuevaRuta)
+                            }
+                        }
+                    }
+                    else {
                         if let trips = json["trips"] as? [String: Any] {
                             let transbordo = json["transfer"] as? Bool ?? false
                             let transbordoTexto = transbordo ? "Si" : "No"

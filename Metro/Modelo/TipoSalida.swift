@@ -9,4 +9,5 @@
 enum TipoSalida {
     case inmediata
     case programada
+    case teleindicador
 }

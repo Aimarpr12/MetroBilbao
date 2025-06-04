@@ -23,7 +23,7 @@ struct ContentView: View {
     @State private var estacionLlegada: Estacion?
     @State private var rutas: [Ruta] = []
     
-    @State private var tipoSalida: TipoSalida = .inmediata
+    @State private var tipoSalida: TipoSalida = .teleindicador
     // Variables para los selectores de fecha
     @State private var fechaSeleccionada: Date = Date()
     @State private var horaDesde: Date = Date()
@@ -52,25 +52,26 @@ struct ContentView: View {
                         .pickerStyle(MenuPickerStyle())
                         .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
                         .padding()
-
-                        // Estación de Llegada Dropdown
-                        Picker("Estación de Llegada", selection: Binding<Estacion?>(
-                            get: {
-                                estacionLlegada
-                            },
-                            set: { newValue in
-                                estacionLlegada = newValue
-                                estacionLlegadaRawValue = newValue?.rawValue // Guardar en UserDefaults
+                        if tipoSalida != .teleindicador {
+                            // Estación de Llegada Dropdown
+                            Picker("Estación de Llegada", selection: Binding<Estacion?>(
+                                get: {
+                                    estacionLlegada
+                                },
+                                set: { newValue in
+                                    estacionLlegada = newValue
+                                    estacionLlegadaRawValue = newValue?.rawValue // Guardar en UserDefaults
+                                }
+                            )) {
+                                Text("Seleccione una estación").tag(nil as Estacion?)
+                                ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
+                                    Text(estacion.rawValue).tag(estacion as Estacion?)
+                                }
                             }
-                        )) {
-                            Text("Seleccione una estación").tag(nil as Estacion?)
-                            ForEach(Estacion.allCases.sorted(by: { $0.rawValue < $1.rawValue })) { estacion in
-                                Text(estacion.rawValue).tag(estacion as Estacion?)
-                            }
+                            .pickerStyle(MenuPickerStyle())
+                            .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
+                            .padding()
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        .accentColor(Color(red: 241/255, green: 78/255, blue: 45/255))
-                        .padding()
                     }
 
                     VStack {
@@ -109,6 +110,7 @@ struct ContentView: View {
                 VStack {
                     // Radio para elegir entre salida inmediata y programar viaje
                     Picker("Tipo de Salida", selection: $tipoSalida) {
+                        Text("Teleindicador").tag(TipoSalida.teleindicador)
                         Text("Salida Inmediata").tag(TipoSalida.inmediata)
                         Text("Programar Viaje").tag(TipoSalida.programada)
                     }
@@ -116,9 +118,9 @@ struct ContentView: View {
                     .padding()
                     .onChange(of: tipoSalida) { newValue in
                         buscarRuta()
-                        
                     }
-
+                    
+                    
                     // Mostrar la selección de fecha/hora solo si el usuario elige "Programar Viaje"
                     if tipoSalida == .programada {
                         HStack {
@@ -173,29 +175,57 @@ struct ContentView: View {
                 .padding()
                 if !rutas.isEmpty {
                     VStack(alignment: .leading) {
-                        HStack {
-                            Text("Salida").bold().frame(width: 60, alignment: .center)
-                            Text("Llegada").bold().frame(width: 70, alignment: .center)
-                            Text("Duración").bold().frame(width: 80, alignment: .center)
-                            Text("Trasbordo").bold().frame(width: 90, alignment: .center)
-                        }
-                        .padding(.horizontal)
-                        Divider()
-                            .background(Color.black) // Cambia el color de la línea a negro
-                            .frame(height: 1)
-                        ScrollView {
-                            VStack(alignment: .leading) {
-                                ForEach(rutas, id: \.id) { (ruta: Ruta) in
-                                    HStack {
-                                        Text(ruta.horaSalida).frame(width: 70, alignment: .center)
-                                        Text(ruta.horaLlegada).frame(width: 70, alignment: .center)
-                                        Text("\(ruta.duracion) min").frame(width: 80, alignment: .center)
-                                        Text(ruta.trasbordo).frame(width: 80, alignment: .center)
+                        if tipoSalida != .teleindicador {
+                            HStack {
+                                Text("Salida").bold().frame(width: 60, alignment: .center)
+                                Text("Llegada").bold().frame(width: 70, alignment: .center)
+                                Text("Duración").bold().frame(width: 80, alignment: .center)
+                                Text("Trasbordo").bold().frame(width: 90, alignment: .center)
+                            }
+                            .padding(.horizontal)
+                            Divider()
+                                .background(Color.black) // Cambia el color de la línea a negro
+                                .frame(height: 1)
+                            ScrollView {
+                                VStack(alignment: .leading) {
+                                    ForEach(rutas, id: \.id) { (ruta: Ruta) in
+                                        HStack {
+                                            Text(ruta.horaSalida).frame(width: 70, alignment: .center)
+                                            Text(ruta.horaLlegada).frame(width: 70, alignment: .center)
+                                            Text("\(ruta.duracion) min").frame(width: 80, alignment: .center)
+                                            Text(ruta.trasbordo).frame(width: 80, alignment: .center)
+                                        }
+                                        .padding(.horizontal)
+                                        Divider()
+                                            .background(Color.black) // Cambia el color de la línea a negro
+                                            .frame(height: 1)
                                     }
-                                    .padding(.horizontal)
-                                    Divider()
-                                        .background(Color.black) // Cambia el color de la línea a negro
-                                        .frame(height: 1)
+                                }
+                            }
+                        }
+                        else {
+                            HStack {
+                                Text("Destino").bold().frame(width: 100, alignment: .center)
+                                Text("Hora").bold().frame(width: 100, alignment: .center)
+                                Text("Faltan").bold().frame(width: 100, alignment: .center)
+                            }
+                            .padding(.horizontal)
+                            Divider()
+                                .background(Color.black) // Cambia el color de la línea a negro
+                                .frame(height: 1)
+                            ScrollView {
+                                VStack(alignment: .leading) {
+                                    ForEach(rutas, id: \.id) { (ruta: Ruta) in
+                                        HStack {
+                                            Text(ruta.horaSalida).frame(width: 100, alignment: .center)
+                                            Text(ruta.horaLlegada).frame(width: 100, alignment: .center)
+                                            Text("\(ruta.duracion) min").frame(width: 100, alignment: .center)
+                                        }
+                                        .padding(.horizontal)
+                                        Divider()
+                                            .background(Color.black) // Cambia el color de la línea a negro
+                                            .frame(height: 1)
+                                    }
                                 }
                             }
                         }
@@ -213,26 +243,39 @@ struct ContentView: View {
                 if let llegadaRaw = estacionLlegadaRawValue {
                     estacionLlegada = Estacion(rawValue: llegadaRaw)
                 }
+                // Realizar la primera búsqueda nada más abrir la app
+                DispatchQueue.main.async {
+                    buscarRuta()
+                }
             }
         
     }
     
     private func buscarRuta() {
-        guard let salida = estacionSalida, let llegada = estacionLlegada else {
-            errorMensaje = "Seleccione ambas estaciones"
+        // Validación de estaciones según el tipo de salida
+        guard let salida = estacionSalida else {
+            errorMensaje = "Seleccione la estación de salida"
             return
         }
         
-        guard salida != llegada else {
-            errorMensaje = "La estación de salida y la estación de llegada no pueden ser iguales"
-            return
+        var llegadaValida: Estacion? = nil
+        if tipoSalida != .teleindicador {
+            guard let llegadaEstacion = estacionLlegada else {
+                errorMensaje = "Seleccione la estación de llegada"
+                return
+            }
+            guard salida != llegadaEstacion else {
+                errorMensaje = "La estación de salida y la estación de llegada no pueden ser iguales"
+                return
+            }
+            llegadaValida = llegadaEstacion
         }
         
         errorMensaje = nil
         
         MetroService.shared.buscarRuta(
             salida: "\(salida)",
-            llegada: "\(llegada)",
+            llegada: llegadaValida != nil ? "\(llegadaValida!)" : "",
             tipoSalida: tipoSalida,
             fechaSeleccionada: tipoSalida == .programada ? fechaSeleccionada : nil,
             horaDesde: tipoSalida == .programada ? horaDesde : nil,
