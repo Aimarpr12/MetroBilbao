@@ -68,6 +68,17 @@ MIT License
 
 ### 🗂️ Fuente de datos
 
-Los horarios y tiempos reales se obtienen del dataset **“Metro Bilbao – Datos de tiempos reales (GTFS-RT)”** publicado por **Metro Bilbao / Consorcio de Transportes de Bizkaia (CTB)**.  
-Se reutilizan bajo la licencia [Creative Commons Atribución 4.0 Internacional](https://creativecommons.org/licenses/by/4.0/).  
-Catálogo oficial de datos abiertos: <https://data.ctb.eus/es/dataset/>
+MetroApp no descarga un paquete GTFS estático: consume directamente los
+end-points oficiales de Metro Bilbao para mostrar datos en tiempo real
+y planificados.
+
+| End-point | Ejemplo de URL | Qué devuelve | Uso dentro de la app |
+|-----------|----------------|--------------|----------------------|
+| **Real-time** | `https://api.metrobilbao.eus/metro/real-time/<origen>/<destino>` | Próximos trenes entre dos estaciones (horarios en < 10 min). | Vista “Salida inmediata” y Widget “Próximos Trenes”. |
+| **Planificado** | `https://api.metrobilbao.eus/metro/obtain-schedule-of-trip/<origen>/<destino>/<hh.mm_desde>/<hh.mm_hasta>/<dd-MM-yyyy>/es` | Horario oficial para cualquier franja y fecha. | Vista “Programar viaje”. |
+| **Teleindicador** | `https://api.metrobilbao.eus/api/stations/<estación>?lang=es` | Mismo texto que aparece en los paneles del andén (destino, minutos y hora). | Vista “Teleindicador” para una estación concreta. |
+
+> **Nota:** Todas las peticiones usan HTTPS y se procesan mediante `URLSession` con
+> codificación JSON. No se almacena información personal ni se guarda caché
+> persistente: la app siempre muestra la información más reciente que
+> devuelve el operador.
